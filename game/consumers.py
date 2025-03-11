@@ -21,4 +21,22 @@ class GameConsumer(AsyncWebsocketConsumer):
         )
 
     async def game_message(self, event):
-        await self.send(text_data=json.dumps(event['message']))
+        message = event['message']
+        if message['type'] == 'token':
+            await self.send(text_data=json.dumps({
+                'type': 'token',
+                'id': message['id'],
+                'x': message['x'],
+                'y': message['y']
+            }))
+        elif message['type'] == 'chat':
+            await self.send(text_data=json.dumps({
+                'type': 'chat',
+                'content': message['content']
+            }))
+        elif message['type'] == 'dice':
+            await self.send(text_data=json.dumps({
+                'type': 'dice',
+                'diceType': message['diceType'],
+                'result': message['result']
+            }))
