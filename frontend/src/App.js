@@ -9,7 +9,8 @@ function App() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [socket, setSocket] = useState(null);
-    const [diceType, setDiceType] = useState('d20'); // Тип кубика по умолчанию
+    const [diceType, setDiceType] = useState('d20');
+    const [tokenName, setTokenName] = useState(''); // Для ввода имени токена
 
     useEffect(() => {
         axios.get('/tokens/')
@@ -23,7 +24,7 @@ function App() {
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             if (data.type === 'token') {
-                setTokens(prev => prev.map(t => t.id === data.id ? data : t));
+                setTokens(prev => prev.map(t => t.id === data.id ? data : t).concat(data.id ? [] : [data]));
             } else if (data.type === 'chat') {
                 setMessages(prev => [...prev, { text: data.content, type: 'chat' }]);
             } else if (data.type === 'dice') {
@@ -65,9 +66,27 @@ function App() {
         if (socket) socket.send(JSON.stringify({ type: 'dice', diceType, result }));
     };
 
+    const addToken = () => {
+        if (tokenName) {
+            const newToken = { id: Date.now(), name: tokenName, x: 0, y: 0 }; // Уникальный ID через timestamp
+            if (socket) socket.send(JSON.stringify({ type: 'token', ...newToken }));
+            setTokens(prev => [...prev, newToken]);
+            setTokenName('');
+        }
+    };
+
+    // Генерация ячеек сетки
+    const gridCells = [];
+    for (let row = 0; row < 15; row++) {
+        for (let col = 0; col < 20; col++) {
+            gridCells.push(<div key={`${row}-${col}`} className="grid-cell" />);
+        }
+    }
+
     return (
         <div className="app">
             <div className="map">
+                {gridCells}
                 {tokens.map(token => (
                     <div
                         key={token.id}
@@ -102,6 +121,12 @@ function App() {
                         <option value="d100">d100</option>
                     </select>
                     <button onClick={rollDice}>Roll</button>
+                    <input
+                        value={tokenName}
+                        onChange={e => setTokenName(e.target.value)}
+                        placeholder="Token name"
+                    />
+                    <button onClick={addToken}>Add Token</button>
                 </div>
             </div>
         </div>

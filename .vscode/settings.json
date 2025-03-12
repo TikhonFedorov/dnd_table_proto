@@ -1,0 +1,9 @@
+{
+    "runOnSave.commands": [
+        {
+            "match": "frontend/src/.*\\.(js|jsx|css)$",
+            "command": "cd frontend && npm run build && cd .. && cp frontend/build/index.html templates/ && python manage.py collectstatic --noinput",
+            "runIn": "terminal"
+        }
+    ]
+}

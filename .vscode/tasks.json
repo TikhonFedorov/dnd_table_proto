@@ -1,0 +1,38 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Frontend",
+            "type": "shell",
+            "command": "cd frontend && npm run build && cd .. && cp frontend/build/index.html templates/ && python manage.py collectstatic --noinput",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Server",
+            "type": "shell",
+            "command": "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 dnd_table.asgi:application",
+            "problemMatcher": [],
+            "group": "none"
+        },
+        {
+            "label": "Start Frontend Dev",
+            "type": "shell",
+            "command": "cd frontend && npm start",
+            "problemMatcher": [],
+            "group": "none",
+            "isBackground": true
+        },
+        {
+            "label": "Watch Frontend",
+            "type": "shell",
+            "command": "cd frontend && npm run watch",
+            "problemMatcher": [],
+            "isBackground": true,
+            "group": "none"
+        }
+    ]
+}
