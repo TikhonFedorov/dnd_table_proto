@@ -1,38 +1,87 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Build Frontend",
-            "type": "shell",
-            "command": "cd frontend && npm run build && cd .. && cp frontend/build/index.html templates/ && python manage.py collectstatic --noinput",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "Run Server",
-            "type": "shell",
-            "command": "python manage.py migrate && daphne -b 0.0.0.0 -p 8000 dnd_table.asgi:application",
-            "problemMatcher": [],
-            "group": "none"
-        },
-        {
-            "label": "Start Frontend Dev",
-            "type": "shell",
-            "command": "cd frontend && npm start",
-            "problemMatcher": [],
-            "group": "none",
-            "isBackground": true
-        },
-        {
-            "label": "Watch Frontend",
-            "type": "shell",
-            "command": "cd frontend && npm run watch",
-            "problemMatcher": [],
-            "isBackground": true,
-            "group": "none"
+  "version": "2.0.0", // Версия формата задач VS Code
+  "tasks": [
+    // Задача 1: Сборка фронтенда в режиме наблюдения
+    {
+      "label": "Build Frontend",
+      "type": "shell", // Использует командную оболочку
+      "command": "cd frontend && npm run watch", // Переходит в папку frontend и запускает npm run watch
+      "group": "build", // Относится к группе сборки
+      "problemMatcher": [], // Отключает парсинг ошибок (можно настроить для React)
+      "runOptions": {
+        "runOn": "folderOpen" // Автоматический запуск при открытии проекта
+      },
+      "detail": "Builds the React frontend in watch mode to automatically rebuild on changes."
+    },
+    // Задача 2: Копирование index.html и сборка статических файлов
+    {
+      "label": "Copy Index and Collect Static",
+      "type": "shell",
+      "command": "copy frontend\\build\\index.html templates\\ && set DJANGO_SETTINGS_MODULE=dnd_table.settings && python manage.py collectstatic --noinput",
+      "group": "build",
+      "dependsOn": ["Build Frontend"], // Ждёт завершения сборки фронтенда
+      "problemMatcher": [],
+      "detail": "Copies the built index.html to templates and collects Django static files."
+    },
+    {
+      "label": "Start Redis",
+      "type": "shell",
+      "command": "docker run -d -p 6379:6379 redis",
+      "problemMatcher": [],
+      "detail": "Starts a Redis container for Channels."
+    },
+    // Задача 3: Запуск сервера через start_server.bat
+    {
+      "label": "Start Server",
+      "type": "shell",
+      "command": "./start_server.bat", // Вызывает внешний скрипт
+      "group": {
+        "kind": "build",
+        "isDefault": true // Доступна через Ctrl+Shift+B как основная задача
+      },
+      "options": {
+        "env": {
+          "DJANGO_SETTINGS_MODULE": "dnd_table.settings" // Устанавливает переменную окружения для Django
         }
-    ]
+      },
+      "detail": "Runs the Django ASGI server with Daphne and Nodemon for auto-restart."
+    },
+    // Задача 4: Полная сборка и запуск (без режима наблюдения)
+    {
+      "label": "Run Full Build",
+      "type": "shell",
+      "command": "echo Full build starting... && cd frontend && npm run build && cd .. && copy frontend\\build\\index.html templates\\ && set DJANGO_SETTINGS_MODULE=dnd_table.settings && python manage.py collectstatic --noinput && start_server.bat",
+      "group": "build",
+      "problemMatcher": [],
+      "detail": "Performs a full build of the frontend, copies files, collects statics, and starts the server."
+    },
+    // Задача 5: Запуск Django development сервера (для отладки без WebSocket)
+    {
+      "label": "Run Django Dev Server",
+      "type": "shell",
+      "command": "venv\\Scripts\\python manage.py runserver",
+      "group": "build",
+      "problemMatcher": [],
+      "options": {
+        "env": {
+          "DJANGO_SETTINGS_MODULE": "dnd_table.settings"
+        }
+      },
+      "detail": "Runs the Django development server (HTTP only, no WebSocket)."
+    },
+    // Задача 6: Выполнение миграций базы данных
+    {
+      "label": "Run Migrations",
+      "type": "shell",
+      "command": "venv\\Scripts\\python manage.py migrate",
+      "group": "build",
+      "problemMatcher": [],
+      "options": {
+        "env": {
+          "DJANGO_SETTINGS_MODULE": "dnd_table.settings"
+        }
+      },
+      "detail": "Applies database migrations for Django models."
+    }
+  ]
 }

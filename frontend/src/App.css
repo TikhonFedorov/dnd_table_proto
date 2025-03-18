@@ -21,30 +21,8 @@
   overflow: auto;
 }
 
-/* Добавляем границы ячеек сетки */
-.map::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  grid-template-columns: repeat(20, 40px);
-  grid-template-rows: repeat(15, 40px);
-  gap: 1px;
-  pointer-events: none; /* Чтобы сетка не мешала взаимодействию */
-  z-index: 5; /* Ниже токенов, но выше фона */
-}
-
-/* Стили для ячеек сетки */
-.map::before {
-  background: transparent;
-}
-
-/* Добавляем границы для каждой ячейки */
 .map > div.grid-cell {
-  border: 1px solid rgba(0, 0, 0, 0.3); /* Чёрные границы с прозрачностью */
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
 .token {
@@ -66,26 +44,69 @@
   transform: scale(1.1);
 }
 
-.chat {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+.token-manager {
   background: white;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 15px;
-  gap: 10px;
+  max-width: 300px; /* Ограничение ширины блока */
 }
 
-.messages {
+.token-input {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.token-input input {
+  flex: 1;
+  max-width: 150px; /* Ограничение ширины поля ввода */
+}
+
+.token-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.token-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  margin: 5px 0;
+  border-radius: 4px;
+  color: white;
+}
+
+.token-item button {
+  padding: 5px 10px;
+  font-size: 12px;
+}
+
+.sidebar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chat, .dice-roller, .token-manager {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
+.chat .messages {
   flex: 1;
   overflow-y: auto;
   padding: 10px;
   background: #f9fafb;
   border-radius: 6px;
+  max-height: 300px;
 }
 
-.messages p {
+.chat .messages p {
   margin: 5px 0;
   padding: 8px 12px;
   border-radius: 4px;
@@ -93,13 +114,19 @@
   color: #111827;
 }
 
-.messages p.dice {
+.chat .messages p.dice {
   background: #10b981;
   color: white;
   font-weight: bold;
 }
 
-input {
+.chat .messages p.whisper {
+  background: #8b5cf6;
+  color: white;
+  font-style: italic;
+}
+
+input, select {
   padding: 10px;
   border: 1px solid #d1d5db;
   border-radius: 4px;
@@ -108,7 +135,7 @@ input {
   transition: border-color 0.2s ease;
 }
 
-input:focus {
+input:focus, select:focus {
   border-color: #3b82f6;
 }
 
@@ -127,16 +154,44 @@ button:hover {
   background: #2563eb;
 }
 
-.chat-controls {
+.chat-controls, .dice-roller, .token-manager {
   display: flex;
   gap: 10px;
 }
 
-select {
-  padding: 10px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  font-size: 14px;
+.character-sheet {
   background: white;
-  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  max-width: 300px;
+}
+
+.character-sheet h3 {
+  margin: 0 0 10px;
+}
+
+.character-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+}
+
+.stats div {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats label {
+  font-size: 12px;
+}
+
+.stats input {
+  width: 50px;
 }

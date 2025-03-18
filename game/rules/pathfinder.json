@@ -1,0 +1,8 @@
+{
+    "name": "Pathfinder",
+    "attributes": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],
+    "modifier_formula": "floor((attribute - 10) / 2)",
+    "attack_roll": "d20 + base_attack_bonus + modifier",
+    "damage_roll": "d8",
+    "initiative": "d20 + dexterity_modifier"
+  }

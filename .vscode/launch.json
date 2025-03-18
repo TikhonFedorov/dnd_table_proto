@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Run D&D Table",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/start_server.bat", // Для Windows: "start_server.bat"
+        "preLaunchTask": "Copy Index and Collect Static",
+        "cwd": "${workspaceFolder}"
+      }
+    ]
+  }

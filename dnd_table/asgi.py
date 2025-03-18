@@ -8,18 +8,16 @@ https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
 """
 
 import os
+import django
 from django.core.asgi import get_asgi_application
-from channels.routing import ProtocolTypeRouter, URLRouter
-from channels.auth import AuthMiddlewareStack
-import game.routing
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dnd_table.settings')
+django.setup()  # <-- Добавьте эту строку перед импортом модулей Django!
+
+from channels.routing import ProtocolTypeRouter, URLRouter
+from game.routing import websocket_urlpatterns  # Импорт WebSocket маршрутов
 
 application = ProtocolTypeRouter({
-    'http': get_asgi_application(),
-    'websocket': AuthMiddlewareStack(
-        URLRouter(
-            game.routing.websocket_urlpatterns
-        )
-    ),
+    "http": get_asgi_application(),
+    "websocket": URLRouter(websocket_urlpatterns),
 })

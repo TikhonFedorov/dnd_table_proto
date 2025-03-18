@@ -1,0 +1,8 @@
+{
+    "name": "D&D 5e",
+    "attributes": ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"],
+    "modifier_formula": "floor((attribute - 10) / 2)",
+    "attack_roll": "d20 + modifier",
+    "damage_roll": "d6",
+    "initiative": "d20 + dexterity_modifier"
+  }

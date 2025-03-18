@@ -11,16 +11,16 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'daphne',
+    'corsheaders',
+    'channels',
+    'game',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
-    'channels',
-    'game',
-    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -67,7 +67,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+            "hosts": [('127.0.0.1', 6379)],
         },
     },
 }
@@ -87,7 +87,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'frontend/build/static'),
-    os.path.join(BASE_DIR, 'frontend/build'),  # Для manifest.json и других корневых файлов
+    os.path.join(BASE_DIR, 'static'),  # Для manifest.json и других корневых файлов
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
